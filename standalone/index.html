@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Car Cost Calculator — Make Cheaper Mistakes</title>
+  <meta name="description" content="Calculate true monthly car budget, hidden bills, insurance, DMV reserves, and lease penalties.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="site-header">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <span class="brand-title">MAKE CHEAPER MISTAKES THAN I DID</span>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-headline" style="margin-bottom: 0;">The payment is only the beginning.</h1>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main 2-Column App Layout -->
+  <main class="calculator-container">
+    <!-- Left Column: Input Form -->
+    <section class="form-column">
+      <!-- Toolbar -->
+      <div class="toolbar-card">
+        <div class="segmented-control" role="group" aria-label="Deal Type">
+          <button type="button" id="toggle-lease" class="segment-btn active" data-type="lease">Leasing</button>
+          <button type="button" id="toggle-finance" class="segment-btn" data-type="finance">Financing</button>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" id="btn-example" class="btn-accent">Try an example</button>
+          <button type="button" id="btn-clear" class="btn-subtle">Clear</button>
+        </div>
+      </div>
+
+      <!-- 01 The offer on the table -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="section-kicker">SECTION 01</span>
+            <h2 class="section-title">The offer on the table</h2>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-field col-span-2">
+            <div class="label-row">
+              <label for="quotedPayment">Monthly payment</label>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="quotedPayment" min="0" step="1" placeholder="e.g. 469" class="input-control font-mono">
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="termMonths" id="term-label">Lease length</label>
+              <span class="helper-text">Months</span>
+            </div>
+            <input type="number" id="termMonths" min="12" max="96" step="1" value="36" class="input-control font-mono">
+            <div class="pill-group" id="term-pills">
+              <button type="button" class="pill-btn" data-months="24">24m</button>
+              <button type="button" class="pill-btn active" data-months="36">36m</button>
+              <button type="button" class="pill-btn" data-months="48">48m</button>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="dueAtSigning">Total due at signing</label>
+              <span class="helper-text">Cash down + drive-off</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="dueAtSigning" min="0" step="50" placeholder="e.g. 3000" class="input-control font-mono">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 The bills around it -->
+      <div class="section-card">
+        <div class="section-header">
+          <div>
+            <span class="section-kicker">SECTION 02</span>
+            <h2 class="section-title">The bills around it</h2>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-field col-span-2 highlight-box">
+            <div class="grid-2-1">
+              <div>
+                <div class="label-row">
+                  <label for="insurancePremium">Insurance premium</label>
+                  <span id="monthly-insurance-preview" class="highlight-mono">= $0/mo</span>
+                </div>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="insurancePremium" min="0" step="25" placeholder="e.g. 1050" class="input-control font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="block-label">Premium covers</label>
+                <div class="segmented-control inline-segment" id="insurance-period-group">
+                  <button type="button" class="segment-btn" data-period="1">1 mo</button>
+                  <button type="button" class="segment-btn active" data-period="6">6 mos</button>
+                  <button type="button" class="segment-btn" data-period="12">12 mos</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="annualDmv">Annual DMV / registration</label>
+              <span id="monthly-dmv-preview" class="helper-text">$0/mo</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="annualDmv" min="0" step="25" placeholder="e.g. 420/yr" class="input-control font-mono">
+            </div>
+            <p class="field-hint">Lump sum yearly renewal; amortized monthly.</p>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="monthlyFuel">Monthly fuel / charging</label>
+              <span class="helper-text">Per month</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="monthlyFuel" min="0" step="10" placeholder="e.g. 160" class="input-control font-mono">
+            </div>
+            <p class="field-hint">Gasoline or EV home/supercharging.</p>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="annualUpkeep">Annual upkeep reserve</label>
+              <span id="monthly-upkeep-preview" class="helper-text">$0/mo</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="annualUpkeep" min="0" step="50" placeholder="e.g. 600/yr" class="input-control font-mono">
+            </div>
+            <p class="field-hint">Tires, brakes, routine maintenance reserve.</p>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="monthlyParking">Monthly parking / tolls</label>
+              <span class="helper-text">Per month</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="monthlyParking" min="0" step="10" placeholder="e.g. 50" class="input-control font-mono">
+            </div>
+            <p class="field-hint">Parking permits, garages, toll passes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 The miles add up (Lease Only) -->
+      <div class="section-card" id="section-mileage">
+        <div class="section-header">
+          <div>
+            <span class="section-kicker">SECTION 03</span>
+            <h2 class="section-title">The miles add up</h2>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-field">
+            <div class="label-row">
+              <label for="allowedMilesPerYear">Allowed miles per year</label>
+              <span class="helper-text">Contract limit</span>
+            </div>
+            <input type="number" id="allowedMilesPerYear" min="5000" step="500" value="10000" class="input-control font-mono">
+            <div class="pill-group" id="mileage-pills">
+              <button type="button" class="pill-btn" data-miles="7500">7.5k</button>
+              <button type="button" class="pill-btn active" data-miles="10000">10k</button>
+              <button type="button" class="pill-btn" data-miles="12000">12k</button>
+              <button type="button" class="pill-btn" data-miles="15000">15k</button>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="milesPerWeek">Miles you drive per week</label>
+              <span id="annual-miles-preview" class="highlight-mono">13,000 mi/yr</span>
+            </div>
+            <input type="number" id="milesPerWeek" min="0" max="1000" step="10" value="250" class="input-control font-mono">
+            <input type="range" id="milesPerWeekSlider" min="50" max="600" step="10" value="250" class="slider-control">
+            <p class="field-hint">35 mi/day roundtrip commute ≈ 245 mi/week.</p>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="chargePerExcessMile">Charge per excess mile</label>
+              <span class="helper-text">Default $0.25</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="chargePerExcessMile" min="0.05" max="1.00" step="0.05" value="0.25" class="input-control font-mono">
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="label-row">
+              <label for="leaseReturnFee">Lease return fee</label>
+              <span class="helper-text">Disposition fee</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="leaseReturnFee" min="0" step="50" value="395" class="input-control font-mono">
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Mileage Banner -->
+        <div id="mileage-banner" class="alert-box alert-overage">
+          <div class="alert-title" id="mileage-banner-title">Expected Mileage Penalty</div>
+          <div class="alert-desc" id="mileage-banner-desc">Calculating driving habits...</div>
+        </div>
+      </div>
+
+      <!-- 04 Monthly take-home income -->
+      <div class="section-card" id="section-income">
+        <div class="section-header">
+          <div>
+            <span class="section-kicker">SECTION 04</span>
+            <h2 class="section-title">Monthly take-home income</h2>
+          </div>
+          <span class="section-badge badge-warning">15% Rule Benchmark</span>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-field col-span-2">
+            <div class="label-row">
+              <label for="monthlyIncome">Monthly take-home pay (after taxes)</label>
+              <span class="helper-text">Your actual net paycheck</span>
+            </div>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">$</span>
+              <input type="number" id="monthlyIncome" placeholder="e.g. 5800" class="input-control font-mono">
+            </div>
+            <div class="pill-group" id="income-pills">
+              <button type="button" class="pill-btn" data-income="4000">$4k</button>
+              <button type="button" class="pill-btn" data-income="5500">$5.5k</button>
+              <button type="button" class="pill-btn" data-income="7000">$7k</button>
+              <button type="button" class="pill-btn" data-income="9000">$9k</button>
+              <button type="button" class="pill-btn" data-income="12000">$12k</button>
+            </div>
+            <p class="field-hint">Rule of thumb: Total car costs should stay under 10–15% of your net pay.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expandable Sections (Hidden Details) -->
+      <div class="accordions-container">
+        <!-- Trade-in -->
+        <details class="accordion-item" id="accordion-tradein">
+          <summary class="accordion-summary">
+            <div class="accordion-title-wrap">
+              <span class="accordion-title">Trade-in vehicle & negative equity</span>
+              <span class="accordion-subtitle" id="tradein-summary-text">Appraised value vs current bank payoff</span>
+            </div>
+          </summary>
+          <div class="accordion-content">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hasTradeIn"> Include vehicle trade-in on this deal
+            </label>
+            <div class="input-grid mt-3" id="tradein-fields" style="display:none;">
+              <div class="input-field">
+                <label for="tradeInPayoff">Current loan payoff</label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="tradeInPayoff" placeholder="e.g. 15000" class="input-control font-mono">
+                </div>
+              </div>
+              <div class="input-field">
+                <label for="tradeInOffer">Trade-in offer from dealer</label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="tradeInOffer" placeholder="e.g. 13000" class="input-control font-mono">
+                </div>
+              </div>
+              <div class="input-field col-span-2" id="negative-equity-card" style="display:none;">
+                <div class="underwater-box">
+                  <div class="underwater-header">
+                    <span id="negative-equity-amount">Negative Equity: $0</span>
+                    <span class="underwater-tag">Underwater</span>
+                  </div>
+                  <label class="block-label">Debt treatment:</label>
+                  <div class="segmented-control inline-segment">
+                    <button type="button" id="debt-rolled" class="segment-btn active" data-treatment="rolled_in">Roll into monthly payment</button>
+                    <button type="button" id="debt-upfront" class="segment-btn" data-treatment="paid_upfront">Pay debt upfront today</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- Exit Scenario -->
+        <details class="accordion-item" id="accordion-exit">
+          <summary class="accordion-summary">
+            <div class="accordion-title-wrap">
+              <span class="accordion-title">Exit scenario & resale value</span>
+              <span class="accordion-subtitle" id="exit-summary-text">Early sale or estimated market trade</span>
+            </div>
+          </summary>
+          <div class="accordion-content">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hasExitScenario"> Simulate selling before or at end of loan
+            </label>
+            <div class="input-grid mt-3" id="exit-fields" style="display:none;">
+              <div class="input-field">
+                <label for="exitMonths">Sell after how many months</label>
+                <input type="number" id="exitMonths" min="6" max="120" step="6" value="36" class="input-control font-mono">
+              </div>
+              <div class="input-field">
+                <label for="estimatedResaleValue">Estimated resale value</label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="estimatedResaleValue" placeholder="e.g. 18000" class="input-control font-mono">
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Right Column: Sticky Receipt -->
+    <aside class="receipt-column">
+      <div class="receipt-card">
+        <div class="receipt-top-trim"></div>
+
+        <div class="receipt-body">
+          <div class="receipt-header">
+            <div>
+              <h3 class="receipt-title">Real Cost Breakdown</h3>
+            </div>
+            <span class="receipt-pill">VERIFIED FORMULA</span>
+          </div>
+
+          <!-- Main Total -->
+          <div class="main-total-box">
+            <div class="total-label-row">
+              <span class="total-label">Monthly car budget</span>
+              <span class="total-tag">TRUE CARRY</span>
+            </div>
+            <div class="total-amount-row">
+              <span class="total-amount font-mono" id="receipt-total-budget">$0</span>
+              <span class="total-period font-mono">/ mo</span>
+            </div>
+            <p class="total-subtext">True sum required to stay fully insured, maintained, and rolling.</p>
+          </div>
+
+          <!-- Breakdown Rows -->
+          <div class="breakdown-list">
+            <div class="breakdown-kicker">INDIVIDUAL MONTHLY COSTS</div>
+
+            <div class="breakdown-row">
+              <span class="row-label" id="receipt-payment-label">Base Payment</span>
+              <span class="row-value font-mono" id="receipt-payment-val">$0</span>
+            </div>
+
+            <div class="breakdown-row row-debt" id="receipt-debt-row" style="display:none;">
+              <span class="row-label">Rolled-in Trade Debt</span>
+              <span class="row-value font-mono" id="receipt-debt-val">+$0</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="row-label">Insurance Reserve (per month)</span>
+              <span class="row-value font-mono" id="receipt-insurance-val">+$0</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="row-label">Fuel / Charging</span>
+              <span class="row-value font-mono" id="receipt-fuel-val">+$0</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="row-label">DMV / Registration Reserve (1/12)</span>
+              <span class="row-value font-mono" id="receipt-dmv-val">+$0</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="row-label">Upkeep & Tires Reserve (1/12)</span>
+              <span class="row-value font-mono" id="receipt-upkeep-val">+$0</span>
+            </div>
+
+            <div class="breakdown-row">
+              <span class="row-label">Parking & Tolls</span>
+              <span class="row-value font-mono" id="receipt-parking-val">+$0</span>
+            </div>
+          </div>
+
+          <!-- The Gap -->
+          <div class="gap-card">
+            <div class="gap-kicker">THE GAP</div>
+            <div class="gap-amount-row">
+              <span class="gap-amount font-mono" id="receipt-gap-amount">+$0</span>
+              <span class="gap-percentage font-mono" id="receipt-gap-percentage">/ mo (+0%)</span>
+            </div>
+            <p class="gap-desc" id="receipt-gap-desc">
+              Your sticker payment tells only part of the story.
+            </p>
+          </div>
+
+          <!-- Income Ratio (If Enabled) -->
+          <div class="income-ratio-box" id="receipt-income-card" style="display:none;">
+            <div class="income-header">
+              <span class="income-label">Car budget / take-home pay</span>
+              <span class="income-ratio-val font-mono" id="receipt-income-ratio">0.0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar" id="receipt-income-bar" style="width:0%;"></div>
+            </div>
+            <div class="progress-labels font-mono">
+              <span>10% Ideal</span>
+              <span>15% Max</span>
+              <span>20%+ High</span>
+            </div>
+            <p class="income-status-desc" id="receipt-income-text"></p>
+          </div>
+
+          <!-- Print / Save PDF Action -->
+          <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #23231f;">
+            <button type="button" class="btn-accent" style="width: 100%; font-family: 'JetBrains Mono', monospace;" onclick="window.print()">
+              Print / Save PDF Report
+            </button>
+            <p style="font-size: 0.625rem; color: #73736b; text-align: center; margin-top: 0.375rem;">
+              Printer-ready formatted financial breakdown.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Future Costs Cards -->
+      <div class="future-cards-wrap">
+        <div class="future-heading">FUTURE COSTS WAITING LATER</div>
+
+        <!-- 1. Cash Needed Upfront -->
+        <div class="card-future">
+          <div class="future-card-head">
+            <span class="future-title">Cash Needed Upfront</span>
+            <span class="future-val font-mono" id="future-upfront-val">$0</span>
+          </div>
+          <p class="future-note" id="future-upfront-note">Due at signing, deposit, and upfront fees.</p>
+        </div>
+
+        <!-- 2. Annual DMV Bills -->
+        <div class="card-future">
+          <div class="future-card-head">
+            <span class="future-title">Annual DMV Bills</span>
+            <span class="future-val font-mono" id="future-dmv-val">$0 / yr</span>
+          </div>
+          <p class="future-note" id="future-dmv-note">Lump-sum renewal bill due annually; keep reserved.</p>
+        </div>
+
+        <!-- 3. Expected Mileage Penalties -->
+        <div class="card-future" id="future-mileage-card">
+          <div class="future-card-head">
+            <span class="future-title">Expected Mileage Penalties</span>
+            <span class="future-val font-mono" id="future-mileage-val">$0</span>
+          </div>
+          <p class="future-note" id="future-mileage-note">Calculated over full term based on weekly driving.</p>
+        </div>
+
+        <!-- 4. Lease Return Costs -->
+        <div class="card-future" id="future-return-card">
+          <div class="future-card-head">
+            <span class="future-title">Lease Return Costs</span>
+            <span class="future-val font-mono" id="future-return-val">$0</span>
+          </div>
+          <p class="future-note" id="future-return-note">Disposition fee plus excess mileage penalties.</p>
+        </div>
+
+        <!-- 5. Estimated Grand Total -->
+        <div class="card-future" id="future-grand-total-card" style="background: linear-gradient(135deg, #241d15, #171715); border-color: rgba(185, 139, 84, 0.45);">
+          <div class="future-card-head">
+            <span class="future-title" id="future-grand-total-title">Estimated Grand Total (36m)</span>
+            <span class="future-val font-mono" id="future-grand-total-val" style="color: #e2c192; font-size: 1.05rem;">$0</span>
+          </div>
+          <p class="future-note" id="future-grand-total-note" style="color: #d1cec7;">Total cash spent over full term.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner" style="justify-content: center; text-align: center;">
+      <span>Real Car Cost Calculator · This is not financial advice · These are estimates based on your inputs · For educational purposes only · Make Cheaper Mistakes Than I Did</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

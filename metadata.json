@@ -1,0 +1,6 @@
+{
+  "name": "Real Car Cost Calculator",
+  "description": "Calculate true monthly car costs, hidden bills, lease mileage penalties, and the financial gap before signing an auto lease or loan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

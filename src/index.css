@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg-primary: #111110;
+    --bg-surface: #181816;
+    --bg-surface-elevated: #22221f;
+    --accent-gold: #b98b54;
+    --accent-gold-hover: #c99a63;
+    --accent-gold-dim: rgba(185, 139, 84, 0.15);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-accent: rgba(185, 139, 84, 0.35);
+  }
+
+  body {
+    background-color: #111110;
+    color: #e5e5e2;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono, .tabular-nums {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111110;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a26;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b98b54;
+}
+
+/* Printer-friendly stylesheet */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #111110 !important;
+  }
+
+  header, footer, nav, button, input, .no-print {
+    display: none !important;
+  }
+
+  * {
+    color: #111110 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .border, [class*="border-"] {
+    border-color: #d1d1cd !important;
+  }
+}
